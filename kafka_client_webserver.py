@@ -30,22 +30,23 @@ consumer = KafkaConsumer('test',
 class requestHandler(BaseHTTPRequestHandler):
     def _set_headers(self):
         self.send_response(200)
-        self.send_header('Content-type', 'application/x-www-form-urlencoded')
         self.send_header('Access-Control-Allow-Credentials', 'true')
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.end_headers()
 
     def do_HEAD(self):
         self._set_headers()
 
     def do_POST(self):
+        self._set_headers()
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+
         msg = getCurrentMessage()
         print(msg)
-        self._set_headers()
-        self.wfile.write(msg)
+        self.wfile.write(json.dumps(msg).encode("utf-8"))
 
     def do_GET(self):
-        self.send_response(200)
+        self._set_headers()
         self.send_header('Content-type', 'image/png')
         self.end_headers()
 
@@ -59,7 +60,8 @@ class requestHandler(BaseHTTPRequestHandler):
 
 def getCurrentMessage():
     msg = next(consumer)
-    return msg.value
+    str = msg.value.decode("utf-8")
+    return str
 
 def load_binary(file):
     with open(file, 'rb') as file:
