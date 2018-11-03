@@ -47,7 +47,7 @@ class requestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        self.send_header('Content-type', 'image/png')
+        self.send_header('Content-type', 'image/jpg')
         self.end_headers()
 
         o = urllib.parse.urlparse(self.path)
@@ -55,7 +55,7 @@ class requestHandler(BaseHTTPRequestHandler):
         print(params)
         if(bool(params)):
             fileID = params['id'][0]
-            fileURL = 'resource/mms/'+ fileID +'.png'
+            fileURL = 'resource/mms/'+ fileID +'.jpg'
             self.wfile.write(load_binary(fileURL))
 
 def getCurrentMessage():
