@@ -42,8 +42,8 @@ class requestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
         msg = getCurrentMessage()
-        print(msg)
-        self.wfile.write(json.dumps(msg).encode("utf-8"))
+        jmsg = json.loads(msg)
+        self.wfile.write(json.dumps(jmsg).encode("utf-8"))
 
     def do_GET(self):
         self._set_headers()
@@ -60,8 +60,8 @@ class requestHandler(BaseHTTPRequestHandler):
 
 def getCurrentMessage():
     msg = next(consumer)
-    str = msg.value.decode("utf-8")
-    return str
+    smsg = msg.value.decode("utf-8")
+    return smsg.split(":",1)[1]
 
 def load_binary(file):
     with open(file, 'rb') as file:
